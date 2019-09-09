@@ -12,10 +12,21 @@ function setupMonitor(fGpu, fMatrix)
   gpu = fGpu
   matrix = fMatrix
 
+  if gpu == nil then
+    print("Failed to find GPU! Exiting...")
+    return false
+  end
+
+  if matrix == nil then
+    print("Failed to find induction matrix! Exiting...")
+    return false
+  end
+
   gpu.setBackground(0xFFFFFF)
   gpu.setForeground(0x000000)
 
   w, h = gpu.getResolution()
+  return true
 end
 
 function drawStatusBar(x, y, title, value, max, w, h)
@@ -31,17 +42,11 @@ function drawStatusBar(x, y, title, value, max, w, h)
 end
 
 function drawScreen()
-  --local w, h = gpu.getResolution()
-
-  if gpu == nil or matrix == nil or keyboard == nil then
-    print("Missing components. Did you forget to call setupMonitor()?")
-  end 
-
    -- Clear screen
   gpu.fill(0, 0, w+1, h+1, " ")
 
   -- Draw program label
-  gpu.set(1, 1, "Induction Matrix Energy Monitor v1.0")
+  gpu.set(1, 1, "Induction Matrix Energy Monitor v1.1")
 
   gpu.set(2, 3, "Input: " .. matrix.getInput())
   gpu.set(2, 4, "Output: " .. matrix.getOutput())
@@ -49,9 +54,7 @@ function drawScreen()
   drawStatusBar(2, 6, "Energy", matrix.getEnergy(), matrix.getMaxEnergy(), w, h)
   drawStatusBar(2, 10, "Stored Energy", matrix.getEnergyStored(), matrix.getMaxEnergyStored(), w, h)
 
-  gpu.set(2, h, "Hold Ctrl+Q to exit")
-
-  os.sleep(0.5)
+  gpu.set(2, h, "Hold Ctrl+Q to exit")  
 end
 
 -- Dunno why but it needs to be like this??
